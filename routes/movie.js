@@ -77,9 +77,14 @@ router.put('/:movie_id',(req,res)=> {
 // Show Movies Between Two Date
 
 router.get('/between/:start_year/:end_year', (req,res)=> {
-  const {start_year, end_year} = body.req;
-  Movie.find({
+  const {start_year, end_year} = req.params;
+  const promise = Movie.find({
     year: { "$gte" : parseInt(start_year), "$lte": parseInt(end_year)}
+  });
+  promise.then((movie)=> {
+    res.json(movie);
+  }).catch((err)=> {
+    res.json(err);
   });
 });
 
