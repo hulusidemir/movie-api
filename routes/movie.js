@@ -30,6 +30,19 @@ router.get('/',(req,res)=> {
     res.json(err);
   });
 });
+
+
+// List Top 10 Movies Using IMDB Score
+router.get('/top10',(req,res)=> {
+  const promise = Movie.find({ }).limit(10).sort({imbdb_score: -1});
+  promise.then((movie)=> {
+    res.json(movie);
+  }).catch((err)=> {
+    res.json(err);
+  });
+});
+
+
 // Find Movie Using ID
 router.get('/:movie_id',(req,res)=> {
   const promise = Movie.findById(req.params.movie_id);
@@ -60,6 +73,17 @@ router.put('/:movie_id',(req,res)=> {
     res.json(err);
   });
 });
+
+// Show Movies Between Two Date
+
+router.get('/between/:start_year/:end_year', (req,res)=> {
+  const {start_year, end_year} = body.req;
+  Movie.find({
+    year: { "$gte" : parseInt(start_year), "$lte": parseInt(end_year)}
+  });
+});
+
+
 
 
 module.exports = router;
