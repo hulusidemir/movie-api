@@ -21,7 +21,7 @@ router.post('/', function(req, res, next) {
     res.json(err);
   });
 });
-
+// Get All Movies
 router.get('/',(req,res)=> {
   const promise = Movie.find({});
   promise.then((data)=> {
@@ -30,7 +30,7 @@ router.get('/',(req,res)=> {
     res.json(err);
   });
 });
-
+// Find Movie Using ID
 router.get('/:movie_id',(req,res)=> {
   const promise = Movie.findById(req.params.movie_id);
   promise.then((movie)=> {
@@ -40,6 +40,26 @@ router.get('/:movie_id',(req,res)=> {
   })
 });
 
+// Delete Movie Using ID
+router.delete('/:movie_id',(req,res)=> {
+  const promise = Movie.findByIdAndRemove(req.params.movie_id);
+  promise.then((movie)=> {
+    res.json({status : 1});
+  }).catch((err)=>{
+    res.json(err);
+  });
+});
+
+
+// Update Movie Using ID 
+router.put('/:movie_id',(req,res)=> {
+  const promise = Movie.findByIdAndUpdate(req.params.movie_id, req.body, {new: true});
+  promise.then((movie)=> {
+    res.json(movie);
+  }).catch((err)=> {
+    res.json(err);
+  });
+});
 
 
 module.exports = router;
