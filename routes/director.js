@@ -15,13 +15,52 @@ router.post('/',(req,res,next)=> {
 });
 
 // List Directors
-router.get('/',(req,res,next)=> {
+/* router.get('/',(req,res,next)=> {
     const promise = Director.find({});
     promise.then((directors)=> {
         res.json(directors);
     }).catch((err)=> {
         res.json(err);
     });
+}); */
+
+
+// List Director's Movies
+router.get('/',(req,res)=> {
+    const promise = Director.aggregate([
+        {
+            $lookup: {
+                from: 'movies',
+                localField: '_id',
+                foreignField: 'director_id',
+                as: 'movies'
+            }
+        },
+        {
+            $unwind: {
+                path: '$movies',
+                preserveNullAndEmptyArrays: true
+            }
+        },
+        {
+            $group: {
+                _id : {
+                    _id : '$_id',
+                    name: '$name',
+                    surName: '$surName',
+                    bio: '$bio'
+                },
+                movies : {
+                    $push: '$movies'
+                }
+            }
+        }
+    ]);
+    promise.then((data)=> {
+        res.json(data);
+    }).catch((err)=> {
+        res.json(err);
+    })
 });
 
 // Find Director Using ID
