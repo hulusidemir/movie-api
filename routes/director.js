@@ -33,12 +33,12 @@ router.get('/',(req,res)=> {
                 from: 'movies',
                 localField: '_id',
                 foreignField: 'director_id',
-                as: 'movies'
+                as: 'filmler'
             }
         },
         {
             $unwind: {
-                path: '$movies',
+                path: '$filmler',
                 preserveNullAndEmptyArrays: true
             }
         },
@@ -50,8 +50,8 @@ router.get('/',(req,res)=> {
                     surName: '$surName',
                     bio: '$bio'
                 },
-                movies : {
-                    $push: '$movies'
+                filmler : {
+                    $push: '$filmler'
                 }
             }
         }
