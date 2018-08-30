@@ -7,6 +7,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 const movieRouter = require('./routes/movie');
 const directorRouter = require('./routes/director');
+const userRouter = require('./routes/users');
 
 const app = express();
 const db = require('./helper/db.js')();
@@ -22,6 +23,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/register', userRouter);
 app.use('/api/movie', movieRouter);
 app.use('/api/director',directorRouter);
 
