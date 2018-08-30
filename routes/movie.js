@@ -22,11 +22,13 @@ router.post('/', function(req, res, next) {
   });
 });
 // Get All Movies
+/*
 router.get('/',(req,res)=> {
   const promise = Movie.find({
-/*     category: { => Kategorisi olmayan filmleri listelemek için exists : false, onları göstermemek için exists: true
+/*     category: { => Kategorisi olmayan filmleri listelemek için exists : false, onları göstermemek için exists:
       $exists : false
     } */
+    /*
   });
   promise.then((data)=> {
     res.json(data);
@@ -34,6 +36,33 @@ router.get('/',(req,res)=> {
     res.json(err);
   });
 });
+*/
+
+// Get All Movies with Director
+router.get('/', (req,res)=> {
+  const promise = Movie.aggregate([
+    {
+      $lookup: {
+        from : 'directors',
+        localField: 'director_id',
+        foreignField: '_id',
+        as : 'directors'
+      }
+    },
+    {
+      $unwind: {
+        path: '$directors',
+        preserveNullAndEmptyArrays: true
+      }
+    }
+  ])
+  promise.then((data)=> {
+    res.json(data);
+  }).catch((err)=> {
+    res.json(err);
+  });
+});
+
 
 
 // List Top 10 Movies Using IMDB Score
