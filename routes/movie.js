@@ -23,7 +23,11 @@ router.post('/', function(req, res, next) {
 });
 // Get All Movies
 router.get('/',(req,res)=> {
-  const promise = Movie.find({});
+  const promise = Movie.find({
+/*     category: { => Kategorisi olmayan filmleri listelemek için exists : false, onları göstermemek için exists: true
+      $exists : false
+    } */
+  });
   promise.then((data)=> {
     res.json(data);
   }).catch((err)=> {
