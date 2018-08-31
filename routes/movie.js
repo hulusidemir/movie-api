@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 // Models
 const Movie = require('../models/Movie');
 
@@ -54,7 +55,8 @@ router.get('/', (req,res)=> {
         path: '$directors',
         preserveNullAndEmptyArrays: true
       }
-    }
+    },
+
   ])
   promise.then((data)=> {
     res.json(data);
@@ -76,16 +78,58 @@ router.get('/top10',(req,res)=> {
 });
 
 
-// Find Movie Using ID
+// Find Movie and Movie Details Using ID
 router.get('/:movie_id',(req,res)=> {
-  const promise = Movie.findById(req.params.movie_id);
-  promise.then((movie)=> {
-    res.json(movie);
+  const promise = Movie.aggregate([
+      {
+          $match: {
+              '_id': mongoose.Types.ObjectId(req.params.movie_id)
+          }
+      },
+      {
+          $lookup: {
+              from: 'directors',
+              localField: 'director_id',
+              foreignField: '_id',
+              as: 'yonetmen'
+          }
+      },
+      {
+          $unwind: {
+              path: '$yonetmen',
+              preserveNullAndEmptyArrays: true
+          }
+      },
+      {
+          $group :{
+              _id: {
+                  id: '$_id',
+                  title: '$title',
+                  category: '$category',
+                  country: '$country'
+              },
+              directors: {
+                  $push: '$yonetmen'
+              }
+          }
+
+      },
+      {
+          $project : {
+              _id: '$_id._id',
+              title: '$_id.title',
+              category: '$_id.category',
+              country: '$_id.country',
+              director: '$directors'
+          }
+      }
+  ])
+  promise.then((data)=> {
+    res.json(data);
   }).catch((err)=> {
     res.json(err);
   })
 });
-
 // Delete Movie Using ID
 router.delete('/:movie_id',(req,res)=> {
   const promise = Movie.findByIdAndRemove(req.params.movie_id);
