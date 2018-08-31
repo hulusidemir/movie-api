@@ -18,6 +18,10 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 app.set('api_secret_key', config.api_secret_key)
 
+
+// Middleware
+const verifyToken = require('./middleware/verify-token');
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -25,6 +29,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api', verifyToken);
 app.use('/register', userRouter);
 app.use('/api/movie', movieRouter);
 app.use('/api/director',directorRouter);
