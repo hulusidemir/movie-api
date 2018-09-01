@@ -22,4 +22,13 @@ router.post('/', (req, res) => {
 
 });
 
+router.get('/users',(req,res)=> {
+    const promise = User.find({});
+    promise.then((users)=> {
+        res.json(users);
+    }).catch((err)=> {
+        res.json(err);
+    });
+});
+
 module.exports = router;

@@ -11,7 +11,7 @@ router.get('/', function(req, res, next) {
 
 
 router.post('/authenticate', (req,res)=> {
-  const {user_name,password} = req.body;
+const {user_name , password} = req.body;
 
   User.findOne({
     user_name
@@ -34,7 +34,10 @@ router.post('/authenticate', (req,res)=> {
           const token = jwt.sign(payload, req.app.get('api_secret_key'),{expiresIn: 720});
           res.json({
             status: true,
-            token
+            token,
+            kullanici: user.user_name,
+            sifre: user.password
+
           });
         }
       });
