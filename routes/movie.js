@@ -77,8 +77,19 @@ router.get('/top10',(req,res)=> {
   });
 });
 
+// Find Movie Using Id
+router.get('/:movie_id',(req,res)=> {
+  const promise = Movie.findById(req.params.movie_id);
+  promise.then((movie)=> {
+    res.json(movie);
+  }).catch((err)=> {
+    res.json(err);
+  });
+});
+
 
 // Find Movie and Movie Details Using ID
+/* 
 router.get('/:movie_id',(req,res)=> {
   const promise = Movie.aggregate([
       {
@@ -129,7 +140,7 @@ router.get('/:movie_id',(req,res)=> {
   }).catch((err)=> {
     res.json(err);
   })
-});
+}); */
 // Delete Movie Using ID
 router.delete('/:movie_id',(req,res)=> {
   const promise = Movie.findByIdAndRemove(req.params.movie_id);
