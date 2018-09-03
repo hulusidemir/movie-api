@@ -29,4 +29,30 @@ describe('/api/movie Tests', () => {
 
         });
     });
+
+    describe('/ POST Movies',()=> {
+        it('it should be post a movie',(done)=> {
+            const film = {
+                title: 'Test Movie',
+                category: 'Test Movies Category',
+                country: 'Türkiye',
+                year:1950,
+                imbdb_score: 10
+            };
+            chai.request(server)
+            .post('/api/movie')
+            .send(film)
+            .set('x-access-token',token)
+            .end((err,res)=> {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('title');
+                res.body.should.have.property('category');
+                res.body.should.have.property('country');
+                res.body.should.have.property('year');
+                res.body.should.have.property('imbdb_score');
+                done();
+            });
+        });
+    });
 });
