@@ -57,7 +57,7 @@ describe('/api/movie Tests', () => {
         });
     });
     describe('api/movie/:movie_id',()=> {
-        it('it should be show movie by given id',(done)=> {
+        it('it should be show movie given by id',(done)=> {
             chai.request(server)
             .get('/api/movie/'+movieId)
             .set('x-access-token',token)
@@ -75,4 +75,30 @@ describe('/api/movie Tests', () => {
             });
         });
     });
+    describe('/ PUT Movies',()=> {
+        it('it should be put a movie given by id',(done)=> {
+            const film = {
+                title: 'Test Güncellenen Movie',
+                category: 'Test Güncellenen Movies Category',
+                country: 'Amerika',
+                year:1952,
+                imbdb_score: 8
+            };
+            chai.request(server)
+            .put('/api/movie/'+ movieId)
+            .send(film)
+            .set('x-access-token',token)
+            .end((err,res)=> {
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                res.body.should.have.property('title').eql(film.title);
+                res.body.should.have.property('category').eql(film.category);
+                res.body.should.have.property('country').eql(film.country);
+                res.body.should.have.property('year').eql(film.year);
+                res.body.should.have.property('imbdb_score').eql(film.imbdb_score);
+                done();
+            });
+        });
+    });
+
 });
