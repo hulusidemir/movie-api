@@ -1,6 +1,6 @@
 {
-  "name": "ders-11-resful-api",
-  "version": "0.0.0",
+  "name": "movie-api",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start:dev": "nodemon ./bin/www",
